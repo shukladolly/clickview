@@ -2,9 +2,17 @@ import playlistData from '../playlists.json';
 import videolistData from '../videos.json';
 import { PlaylistItem } from '../components/playlist-item';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { MyContext } from '../app';
+import { Playlist } from '../interfaces/playlist';
+
+
 
 import { SetStateAction, useState } from 'react';
 export function Playlists() {
+  const { myPlayListDats, addData, updateData } = useContext(MyContext);
+
+
   const [playlists, setPlaylists] = useState(playlistData);
   const [inputValue, setInputValue] = useState('');
   const [w, setInputVidos] = useState(videolistData);
@@ -20,15 +28,17 @@ export function Playlists() {
         completed: false,
         dateCreated: Date.now().toString()
       };
-      setPlaylists([...playlists, newTodo]);
+      addData(newTodo);
+      // setPlaylists([...playlists, newTodo]);
       setInputValue('');
     }
   };
 
   const handleDeleteChange = (index: number) => {
-    const newTodos = [...playlists];
-    newTodos.splice(index, 1);
-    setPlaylists(newTodos);
+    updateData(index);
+    // const newTodos = [...playlists];
+    // newTodos.splice(index, 1);
+    // setPlaylists(newTodos);
   };
 
   const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -44,7 +54,7 @@ export function Playlists() {
     <main>
       <div>
         {
-        playlists.map((playListItem, index) => (
+        myPlayListDats.map((playListItem, index) => (
           <div>
           <PlaylistItem playlist={playListItem} />
           <button className='mb-0' onClick={() => handleDeleteChange(index)}>Delete Playlist</button>
